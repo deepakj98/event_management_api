@@ -34,10 +34,15 @@ class EventsController < ApplicationController
   end
 
   def search
-    events = Event.where("date >= ?", params[:date].to_date)
+    events = Event.where("date = ?", params[:date].to_date) if params[:date]
     events = events.where("venue_id = ?", params[:venue_id]) if params[:venue_id]
     events = events.where("price = ?", params[:price]) if params[:price]
-    render json: events
+
+    if events
+      render json: events
+    else
+      render json: { errors: "enter date, venue_id, or price to search" }
+    end
   end
 
 
