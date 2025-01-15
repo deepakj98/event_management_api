@@ -31,7 +31,7 @@ class VenuesController < ApplicationController
 
   def destroy
     venue = Venue.find_by(id: params[:id])
-    if venue
+    if venue.present?
       venue.destroy
       render json: {success: "deleted record"}
     else

@@ -50,25 +50,22 @@ class EventsController < ApplicationController
   end
 
   def search
-    events = Event.where("date = ?", params[:date].to_date) if params[:date]
-    if events
-      events = events.where("venue_id = ?", params[:venue_id]) if params[:venue_id]
-    else
-      events = Event.where("venue_id = ?", params[:venue_id]) if params[:venue_id]
+    if params[:date].blank? && params[:venue_id].blank? && params[:price].blank?
+      render json: { errors: "Enter at least one of date, venue_id, or price to search" }, status: :unprocessable_entity
+      return
     end
 
-    if events
-      events = events.where("price = ?", params[:price]) if params[:price]
+    events = Event.all
+    events = events.where("date = ?", params[:date].to_date) if params[:date].present?
+    events = events.where("venue_id = ?", params[:venue_id]) if params[:venue_id].present?
+    events = events.where("price = ?", params[:price]) if params[:price].present?
+
+    if events.exists?
+      render json: events, status: :ok
     else
-      events = Event.where("price = ?", params[:price]) if params[:price]
-    end
-    if events
-      render json: events
-    else
-      render json: { errors: "enter date, venue_id, or price to search" }
+      render json: { errors: "No events found matching your criteria" }, status: :not_found
     end
   end
-
 
   private
 
