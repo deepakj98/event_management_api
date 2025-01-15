@@ -3,27 +3,39 @@ class EventsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
-    venue = Venue.find(params[:venue_id])
-    events = venue.events
-    render json: events
+    venue = Venue.find_by(id: params[:venue_id])
+    if venue
+      events = venue.events
+      render json: events
+    else
+      render json: {errors: "event not present"}
+    end
   end
 
   def create
-    venue = Venue.find(params[:venue_id])
-    event = venue.events.new(event_params)
-    if event.save
-      render json: event, status: :created
+    venue = Venue.find_by(id: params[:venue_id])
+    if venue.present?
+      event = venue.events.new(event_params)
+      if event.save
+        render json: event, status: :created
+      else
+        render json: { errors: event.errors.full_messages }, status: :unprocessable_entity
+      end
     else
-      render json: { errors: event.errors.full_messages }, status: :unprocessable_entity
+      render json: {errors: "venue not present for this venue_id"}
     end
   end
 
   def update
-    event = Event.find(params[:id])
-    if event.update(event_params)
-      render json: event
+    event = Event.find_by(id: params[:id])
+    if event.present?
+      if event.update(event_params)
+        render json: event
+      else
+        render json: { errors: event.errors.full_messages }, status: :unprocessable_entity
+      end
     else
-      render json: { errors: event.errors.full_messages }, status: :unprocessable_entity
+      render json: {errors: "event not present for this id"}
     end
   end
 

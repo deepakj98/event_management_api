@@ -3,12 +3,16 @@ class BookingsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
-    if current_user.admin?
-      bookings = Booking.all
+    if current_user
+      if current_user.admin?
+        bookings = Booking.all
+      else
+        bookings = current_user.bookings
+      end
+      render json: bookings
     else
-      bookings = current_user.bookings
+      render json: {error: "kindly login"}
     end
-    render json: bookings
   end
 
   def create
@@ -52,12 +56,16 @@ class BookingsController < ApplicationController
   end
 
   def destroy
-    booking = Booking.find(params[:id])
-    if booking.user == current_user || current_user.admin?
-      booking.destroy
-      head :no_content
+    booking = Booking.find_by(params[:id])
+    if booking
+      if booking.user == current_user || current_user.admin?
+        booking.destroy
+        head :no_content
+      else
+        render json: { error: 'Unauthorized' }, status: :unauthorized
+      end
     else
-      render json: { error: 'Unauthorized' }, status: :unauthorized
+      render json: {error: 'booking not present for this id'}
     end
   end
 end

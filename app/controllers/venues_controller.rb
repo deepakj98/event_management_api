@@ -17,11 +17,15 @@ class VenuesController < ApplicationController
   end
 
   def update
-    venue = Venue.find(params[:id])
-    if venue.update(venue_params)
-      render json: venue
+    venue = Venue.find_by(id: params[:id])
+    if venue.present?
+      if venue.update(venue_params)
+        render json: venue
+      else
+        render json: { errors: venue.errors.full_messages }, status: :unprocessable_entity
+      end
     else
-      render json: { errors: venue.errors.full_messages }, status: :unprocessable_entity
+      render json: {errors: "venue not found"}
     end
   end
 

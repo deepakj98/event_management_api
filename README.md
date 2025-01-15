@@ -235,6 +235,4 @@ API ENDPOINTS
 16. bookings#destroy			`/bookings/:id`				DELETE
 
 
-
-
 * ...
