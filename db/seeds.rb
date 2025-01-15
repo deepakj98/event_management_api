@@ -25,8 +25,8 @@ venue2 = Venue.create!(name: "Community Center", location: "New Delhi", capacity
 
 # Create Events
 puts "Creating events..."
-event1 = Event.create!(title: "Music Concert", date: 3.days.from_now, price: 50.00, venue: venue1, description: "lorem ipsum")
-event2 = Event.create!(title: "Art Exhibition", date: 5.days.from_now, price: 30.00, venue: venue1, description: "lorem ipsum")
+event1 = Event.create!(title: "Music Concert", date: 3.days.from_now, price: 500.00, venue: venue1, description: "lorem ipsum")
+event2 = Event.create!(title: "Art Exhibition", date: 5.days.from_now, price: 300.00, venue: venue1, description: "lorem ipsum")
 event3 = Event.create!(title: "Tech Conference", date: 7.days.from_now, price: 100.00, venue: venue2, description: "lorem ipsum")
 
 # Create Bookings
