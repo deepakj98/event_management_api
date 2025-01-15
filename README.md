@@ -12,10 +12,7 @@ Things you may want to cover:
 
  `rails db:migrate`
 
- `rails db:seed` to populate test data
-
- `docker-compose up --build`
- 
+ `rails db:seed` to populate test data 
 
 
 API ENDPOINTS
