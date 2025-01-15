@@ -4,11 +4,14 @@ This README would normally document whatever steps are necessary to get the
 application up and running.
 
 Things you may want to cover:
-# `git clone https://github.com/deepakj98/event_management_api.git`
-# `cd event_management_api`
-# `bundle install`
-# `rails db:migrate`
-# run `rails db:seed` to populate test data
+ `git clone https://github.com/deepakj98/event_management_api.git`
+ `cd event_management_api`
+ `bundle install`
+ `rails db:migrate`
+ `rails db:seed` to populate test data
+
+ `docker-compose up --build`
+ 
 
 
 API ENDPOINTS

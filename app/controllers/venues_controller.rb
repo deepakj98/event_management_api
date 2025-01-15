@@ -26,9 +26,13 @@ class VenuesController < ApplicationController
   end
 
   def destroy
-    venue = Venue.find(params[:id])
-    venue.destroy
-    head :no_content
+    venue = Venue.find_by(id: params[:id])
+    if venue
+      venue.destroy
+      render json: {success: "deleted record"}
+    else
+      render json: {else: "not found"}
+    end
   end
 
   private

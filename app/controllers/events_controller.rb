@@ -28,16 +28,28 @@ class EventsController < ApplicationController
   end
 
   def destroy
-    event = Event.find(params[:id])
-    event.destroy
-    head :no_content
+    event = Event.find_by(id: params[:id])
+    if event
+      event.destroy
+      render json: { success: "deleted successfully" }
+    else
+      render json: { error: "record not found" }
+    end
   end
 
   def search
     events = Event.where("date = ?", params[:date].to_date) if params[:date]
-    events = events.where("venue_id = ?", params[:venue_id]) if params[:venue_id]
-    events = events.where("price = ?", params[:price]) if params[:price]
+    if events
+      events = events.where("venue_id = ?", params[:venue_id]) if params[:venue_id]
+    else
+      events = Event.where("venue_id = ?", params[:venue_id]) if params[:venue_id]
+    end
 
+    if events
+      events = events.where("price = ?", params[:price]) if params[:price]
+    else
+      events = Event.where("price = ?", params[:price]) if params[:price]
+    end
     if events
       render json: events
     else
