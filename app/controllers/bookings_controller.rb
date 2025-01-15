@@ -12,31 +12,42 @@ class BookingsController < ApplicationController
   end
 
   def create
-    event = Event.find(params[:event_id])
-    booking = event.bookings.new(user: current_user, status: 'pending')
-
-    if booking.save
-      render json: booking, status: :created
+    event = Event.find_by(id: params[:event_id])
+    if event
+      booking = event.bookings.new(user: current_user, status: 'pending')
+      if booking.save
+        render json: booking, status: :created
+      else
+        render json: { errors: booking.errors.full_messages }, status: :unprocessable_entity
+      end
     else
-      render json: { errors: booking.errors.full_messages }, status: :unprocessable_entity
+        render json: { errors: "event not found" }
     end
   end
 
   def approve
-    booking = Booking.find(params[:id])
-    if current_user.admin? && booking.update(status: 'approved')
-      render json: booking
+    booking = Booking.find_by(id: params[:id])
+    if booking
+      if current_user.admin? && booking.update(status: 'approved')
+        render json: booking
+      else
+        render json: { error: 'Unauthorized or Invalid booking' }, status: :unauthorized
+      end
     else
-      render json: { error: 'Unauthorized or Invalid booking' }, status: :unauthorized
+        render json: { error: 'not found' }
     end
   end
 
   def reject
-    booking = Booking.find(params[:id])
-    if current_user.admin? && booking.update(status: 'rejected')
-      render json: booking
+    booking = Booking.find_by(id: params[:id])
+    if booking
+      if current_user.admin? && booking.update(status: 'rejected')
+        render json: booking
+      else
+        render json: { error: 'Unauthorized or Invalid booking' }, status: :unauthorized
+      end
     else
-      render json: { error: 'Unauthorized or Invalid booking' }, status: :unauthorized
+        render json: { error: 'not found' }
     end
   end
 

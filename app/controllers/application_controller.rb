@@ -5,11 +5,15 @@ class ApplicationController < ActionController::Base
 	end
 
 	def authenticate_admin
-		current_user.admin?
+		unless current_user.admin?
+			render json: { error: "Access denied. Please log in as admin." }, status: :unauthorized
+		end
 	end
 
 	def authenticate_user
-		return unless current_user.present?
+		unless current_user.present?
+			render json: { error: "Access denied. Please log in." }, status: :unauthorized
+		end
 	end
 
 end
